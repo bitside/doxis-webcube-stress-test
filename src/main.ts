@@ -10,12 +10,8 @@ const crawler = new PlaywrightCrawler({
   headless: false,
   preNavigationHooks: [
     // Removes the cookie from the request header
-    async ({ request }) => {
-      request.headers = {
-        ...request.headers,
-        Cookie: '',
-      };
-      // await page.context().clearCookies();
+    async ({ request, session }) => {
+      session?.setCookie('JSESSIONID=;', request.url);
     },
   ],
   // Don't persist sessions
