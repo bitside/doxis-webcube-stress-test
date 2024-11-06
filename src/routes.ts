@@ -22,11 +22,6 @@ export const fetchDocumentUrlFromHelios = async (): Promise<string | Request> =>
     },
   });
   return response.data.documentURL;
-  // return new Request({
-  //   url: response.data.documentURL,
-  //   // we manually erase the cookie from the response to force a new JSESSIONID
-  //   headers: { Cookie: "" },
-  // });
 }
 
 export const fetchMultipleDocumentUrls = async (n: number = CONCURRENCY): Promise<(string | Request)[]> => {
@@ -49,7 +44,7 @@ export const createRouter = (options: CreateRouterOptions) => {
       // so that we can be sure, that the webCube and therefore the Tomcat
       // session have been initialized.
       // const WAIT_FOR_SELECTOR = 'p:has-text("TEXT ON THE PAGE")';
-      const WAIT_FOR_SELECTOR = 'body:has-text("Amazon Basics")';
+      const WAIT_FOR_SELECTOR = '.ribbon-element:has-text("Annotationen setzen")';
       const TIMEOUT_MS = 10000;
       await waitForSelector(WAIT_FOR_SELECTOR, TIMEOUT_MS);
 
