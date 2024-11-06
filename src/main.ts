@@ -1,6 +1,6 @@
 import 'dotenv/config';
 // For more information, see https://crawlee.dev/
-import { PlaywrightCrawler, RequestQueue } from 'crawlee';
+import { Configuration, PlaywrightCrawler, RequestQueue } from 'crawlee';
 import { createRouter, fetchMultipleDocumentUrls } from './routes.js';
 
 const requestQueue = await RequestQueue.open();

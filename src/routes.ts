@@ -24,7 +24,7 @@ export const fetchDocumentUrlFromHelios = async (): Promise<string> => {
 }
 
 export const fetchMultipleDocumentUrls = async (n: number = CONCURRENCY): Promise<string[]> => {
-  return Promise.all(Array(n).map((_) => fetchDocumentUrlFromHelios()));
+  return Promise.all([...Array(n)].map((_) => fetchDocumentUrlFromHelios()));
 }
 
 export const createRouter = (options: CreateRouterOptions) => {
