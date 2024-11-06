@@ -5,34 +5,27 @@ export interface CreateRouterOptions {
   requestQueue: RequestQueue;
 }
 
-// TODO: Adjust to match the real Helios response
 interface HeliosResponse {
-  documentUrl: string;
+  documentURL: string;
 }
 
 // TODO: Adjust the request here to actually work with Helios.
+export const RUN_N_IN_PARALLEL = 10;
+const HELIOS_DOCUMENT_URL = 'REPLACE_HERE';
+const KEYCLOAK_TOKEN = 'REPLACE_HERE';
+
 export const fetchDocumentUrlFromHelios = async (): Promise<string> => {
-  const URL = 'https://url.to.helios/endpoint';
-  const response = await axios.get<HeliosResponse>(URL, {
+  const response = await axios.get<HeliosResponse>(HELIOS_DOCUMENT_URL, {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ???',
+      'Authorization': `Bearer ${KEYCLOAK_TOKEN}`,
     },
   });
-  return response.data.documentUrl;
+  return response.data.documentURL;
 }
 
-// Takes a document url and returns and array with the same url repeated n times,
-// but each one with a different `v=` query param appended. This is required because
-// by default, crawlee won't request the same url twice.
-export const multiplyDocumentUrl = (documentUrl: string, n: number): string[] => {
-  const urls: string[] = [];
-  for (let i = 0; i < n; i++) {
-    const url = new URL(documentUrl);
-    url.searchParams.set('v', `${Math.random()}`);
-    urls.push(url.toString());
-  }
-  return urls;
+export const fetchMultipleDocumentUrls = async (n: number = RUN_N_IN_PARALLEL): Promise<string[]> => {
+  return Promise.all(Array(n).map((_) => fetchDocumentUrlFromHelios()));
 }
 
 export const createRouter = (options: CreateRouterOptions) => {
@@ -55,8 +48,8 @@ export const createRouter = (options: CreateRouterOptions) => {
         log.info('Request queue is empty. Fetching new document url from Helios.');
         // When the queue is empty, we fetch a new document url from
         // helios and add it to the queue multiple times.
-        const documentUrl = await fetchDocumentUrlFromHelios();
-        await addRequests(multiplyDocumentUrl(documentUrl, 10));
+        const documentUrls = await fetchMultipleDocumentUrls();
+        await addRequests(documentUrls);
       }
   });
 

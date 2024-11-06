@@ -1,7 +1,7 @@
 // For more information, see https://crawlee.dev/
 import { PlaywrightCrawler, RequestQueue } from 'crawlee';
 
-import { createRouter, fetchDocumentUrlFromHelios, multiplyDocumentUrl } from './routes.js';
+import { createRouter, fetchMultipleDocumentUrls } from './routes.js';
 
 const requestQueue = await RequestQueue.open();
 
@@ -20,12 +20,11 @@ const crawler = new PlaywrightCrawler({
         enable: false,
     },
   },
-  // proxyConfiguration: new ProxyConfiguration({ proxyUrls: ['...'] }),
   requestHandler: createRouter({ requestQueue }),
-  // Comment this option to scrape the full website.
+  // TODO: after this many requests Crawlee will stop
   maxRequestsPerCrawl: 5,
 });
 
-const documentUrl = await fetchDocumentUrlFromHelios();
+const documentUrls = await fetchMultipleDocumentUrls();
 
-await crawler.run(multiplyDocumentUrl(documentUrl, 2));
+await crawler.run(documentUrls);
