@@ -21,12 +21,12 @@ export const fetchDocumentUrlFromHelios = async (): Promise<string | Request> =>
       'Authorization': `Bearer ${KEYCLOAK_TOKEN}`,
     },
   });
-  return new Request({
-    url: response.data.documentURL,
-    // we manually erase the cookie from the response to force a new JSESSIONID
-    headers: { Cookie: "" },
-  });
-  // return response.data.documentURL;
+  return response.data.documentURL;
+  // return new Request({
+  //   url: response.data.documentURL,
+  //   // we manually erase the cookie from the response to force a new JSESSIONID
+  //   headers: { Cookie: "" },
+  // });
 }
 
 export const fetchMultipleDocumentUrls = async (n: number = CONCURRENCY): Promise<(string | Request)[]> => {

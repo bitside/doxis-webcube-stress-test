@@ -8,12 +8,16 @@ const requestQueue = await RequestQueue.open();
 const crawler = new PlaywrightCrawler({
   requestQueue,
   headless: false,
-  // Ensure that cookies are cleared for every request
-  // preNavigationHooks: [
-  //   async ({ page }) => {
-  //     await page.context().clearCookies();
-  //   },
-  // ],
+  preNavigationHooks: [
+    // Removes the cookie from the request header
+    async ({ request }) => {
+      request.headers = {
+        ...request.headers,
+        Cookie: '',
+      };
+      // await page.context().clearCookies();
+    },
+  ],
   // Don't persist sessions
   // launchContext: {
   //   useIncognitoPages: true,
