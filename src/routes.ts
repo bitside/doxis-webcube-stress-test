@@ -14,20 +14,22 @@ const HELIOS_DOCUMENT_URL = process.env.HELIOS_DOCUMENT_URL!;
 const KEYCLOAK_TOKEN = process.env.KEYCLOAK_TOKEN!;
 export const MAX_REQUESTS_PER_CRAWL = parseInt(process.env.MAX_REQUESTS_PER_CRAWL || '5', 10);
 
-export const fetchDocumentUrlFromHelios = async (): Promise<string> => {
-  // new Request({
-
-  // })
+export const fetchDocumentUrlFromHelios = async (): Promise<string | Request> => {
   const response = await axios.get<HeliosResponse>(HELIOS_DOCUMENT_URL, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${KEYCLOAK_TOKEN}`,
     },
   });
-  return response.data.documentURL;
+  return new Request({
+    url: response.data.documentURL,
+    // we manually erase the cookie from the response to force a new JSESSIONID
+    headers: { Cookie: "" },
+  });
+  // return response.data.documentURL;
 }
 
-export const fetchMultipleDocumentUrls = async (n: number = CONCURRENCY): Promise<string[]> => {
+export const fetchMultipleDocumentUrls = async (n: number = CONCURRENCY): Promise<(string | Request)[]> => {
   return Promise.all([...Array(n)].map((_) => fetchDocumentUrlFromHelios()));
 }
 

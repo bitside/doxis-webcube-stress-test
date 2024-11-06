@@ -15,9 +15,9 @@ const crawler = new PlaywrightCrawler({
   //   },
   // ],
   // Don't persist sessions
-  launchContext: {
-    useIncognitoPages: true,
-  },
+  // launchContext: {
+  //   useIncognitoPages: true,
+  // },
   useSessionPool: true,
   persistCookiesPerSession: false,
   requestHandler: createRouter({ requestQueue }),
