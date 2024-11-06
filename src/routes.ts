@@ -9,10 +9,9 @@ interface HeliosResponse {
   documentURL: string;
 }
 
-// TODO: Adjust the request here to actually work with Helios.
-export const RUN_N_IN_PARALLEL = 10;
-const HELIOS_DOCUMENT_URL = 'REPLACE_HERE';
-const KEYCLOAK_TOKEN = 'REPLACE_HERE';
+export const CONCURRENCY = parseInt(process.env.CONCURRENCY || '10', 10);
+const HELIOS_DOCUMENT_URL = process.env.HELIOS_DOCUMENT_URL!;
+const KEYCLOAK_TOKEN = process.env.KEYCLOAK_TOKEN!;
 
 export const fetchDocumentUrlFromHelios = async (): Promise<string> => {
   const response = await axios.get<HeliosResponse>(HELIOS_DOCUMENT_URL, {
@@ -24,7 +23,7 @@ export const fetchDocumentUrlFromHelios = async (): Promise<string> => {
   return response.data.documentURL;
 }
 
-export const fetchMultipleDocumentUrls = async (n: number = RUN_N_IN_PARALLEL): Promise<string[]> => {
+export const fetchMultipleDocumentUrls = async (n: number = CONCURRENCY): Promise<string[]> => {
   return Promise.all(Array(n).map((_) => fetchDocumentUrlFromHelios()));
 }
 

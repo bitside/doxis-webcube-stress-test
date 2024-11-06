@@ -4,13 +4,11 @@ This is a simple stress test for the WebCube Tomcat. It uses the NodeJS Crawlee 
 
 ## Getting Started
 
-Before this actually does something useful, you need to adjust the Helios endpoint and response in `routes.ts`. Also replace the `WAIT_FOR_SELECTOR` to wait for a text that
-is actually present in the WebCube.
+Copy the `.env.template` to `.env` and fill in the environment variables.
 
-- [ ] Update `HeliosResponse` interface
-- [ ] Update `fetchDocumentUrlFromHelios` with real url and request headers
-- [ ] Update `WAIT_FOR_SELECTOR` to wait for a text that is actually present in the WebCube
-
+```sh
+cp .env.template .env
+```
 Once that's done, you should be able to run via
 
 ```sh
